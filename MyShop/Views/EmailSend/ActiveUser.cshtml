@@ -1,0 +1,12 @@
+﻿@model MyShop.Models.Users
+
+<div style="width:100%;direction:rtl">
+    <h1>@Model.UserName عزیز !</h1>
+    <br />
+    <p>با تشکر از شما بابت ثبت نام در سایت ما</p>
+    <br />
+    <p>برای فعال سازی حساب روی لینک زیر کلیک نماید</p>
+    <br />
+    <a href="@Request.Url.GetLeftPart(UriPartial.Authority)/Account/ActiveUser?Active_Code=@Model.ActiveCode">فعال سازی حساب</a>
+
+</div>

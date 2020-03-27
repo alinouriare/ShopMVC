@@ -1,0 +1,47 @@
+﻿@model IEnumerable<MyShop.Models.Products>
+@using System.Collections.Generic
+@{
+    ViewBag.Title = "فهرست " + Server.HtmlDecode(Html.DisplyModelPluralName(model => model).ToString());
+}
+
+<h2>@ViewBag.Title</h2>
+
+        @(Html.Kendo().Grid(Model)
+      .Name("Grid")
+      .Columns(columns =>
+      {
+
+      columns.Bound(item => @item.ProductImage).Title("تصویر").Filterable(false).Groupable(false)
+                    .Template(@<text>
+                              <img class="thumbnail" src="~/ProductImages/Thumb/@item.ProductImage"/>
+                    </text>);         
+
+                    columns.Bound(model => model.ProductTitle);
+
+                    columns.Bound(model => model.ProductPrice);
+                  
+                    columns.Bound(model => model.CreateDate);
+                    columns.Bound(model => model.Product_Groups.GroupTitle);
+                    columns.Bound(item => @item.ProductID).Title("دستورات").Filterable(false).Groupable(false)
+                            .Template(@<text>
+									@Html.ActionLink("ویرایش", "Edit", new {id = @item.ProductID}, new {@class = "k-button k-button-icontext k-grid-Edit"})
+									@Html.ActionLink("حذف", "Delete", new {id = @item.ProductID}, new {@class = "k-button k-button-icontext k-grid-Delete"})
+									</text>).Width(200);  
+		})
+		.ToolBar(toolbar =>
+					{
+						toolbar.Custom().Action("Create","Products").Text("افزودن");                          
+					}
+		)
+		.Groupable()
+		.Pageable()
+		.Sortable()
+        
+		.Scrollable()
+		.Filterable()              
+		.DataSource(dataSource => dataSource
+									.Server()
+							
+									.Model(model => model.Id(item => item.ProductID))
+					)              
+	)

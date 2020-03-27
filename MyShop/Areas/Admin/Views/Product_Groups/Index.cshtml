@@ -1,0 +1,39 @@
+﻿@model IEnumerable<MyShop.Models.Product_Groups>
+
+@{
+    ViewBag.Title = "فهرست " + Server.HtmlDecode(Html.DisplyModelPluralName(model => model).ToString());
+}
+
+<h2>@ViewBag.Title</h2>
+<div class="k-rtl">
+    @(Html.Kendo().Grid(Model)
+        .Name("Grid")
+        .Columns(columns =>
+        {
+        columns.Bound(model => model.GroupTitle);
+        columns.Bound(item => @item.GroupID).Title("دستورات").Filterable(false).Groupable(false)
+                      .Template(@<text>
+                @Html.ActionLink("ویرایش", "Edit", new { id = @item.GroupID }, new { @class = "k-button k-button-icontext k-grid-Edit" })
+                @Html.ActionLink("حذف", "Delete", new { id = @item.GroupID }, new { @class = "k-button k-button-icontext k-grid-Delete" })
+                    </text>).Width(200);
+        })
+        .ToolBar(toolbar =>
+        {
+            toolbar.Custom().Action("Create", "Product_Groups").Text("افزودن");
+        }
+        )
+        .Groupable()
+        .Pageable()
+        .Sortable()
+        .Scrollable()
+        .Filterable()
+        .DataSource(dataSource => dataSource
+                                    .Server()
+
+                                    .Model(model => model.Id(item => item.GroupID))
+                    )
+    )
+</div>
+@section Script
+{
+}

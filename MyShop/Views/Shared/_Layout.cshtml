@@ -1,0 +1,112 @@
+﻿<!DOCTYPE html>
+@{ MyShop.Classes.SiteSee.See();}
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="~/Scripts/modernizr-2.6.2.js"></script>
+	@*<link href="@Url.Content("~/Content/kendo/2016.2.607/kendo.common.min.css")" rel="stylesheet" type="text/css" />
+	<link href="@Url.Content("~/Content/kendo/2016.2.607/kendo.mobile.all.min.css")" rel="stylesheet" type="text/css" />
+	<link href="@Url.Content("~/Content/kendo/2016.2.607/kendo.dataviz.min.css")" rel="stylesheet" type="text/css" />
+	<link href="@Url.Content("~/Content/kendo/2016.2.607/kendo.default.min.css")" rel="stylesheet" type="text/css" />
+	<link href="@Url.Content("~/Content/kendo/2016.2.607/kendo.dataviz.default.min.css")" rel="stylesheet" type="text/css" />
+	<link href="@Url.Content("~/Content/kendo/2016.2.607/kendo.rtl.min.css")" rel="stylesheet" type="text/css" />
+	<script src="@Url.Content("~/Scripts/kendo/2016.2.607/jquery.min.js")"></script>
+	<script src="@Url.Content("~/Scripts/kendo/2016.2.607/jszip.min.js")"></script>
+	<script src="@Url.Content("~/Scripts/kendo/2016.2.607/kendo.all.min.js")"></script>
+	<script src="@Url.Content("~/Scripts/kendo/2016.2.607/kendo.aspnetmvc.min.js")"></script>
+	<script src="@Url.Content("~/Scripts/kendo.modernizr.custom.js")"></script>*@
+</head>
+<body class="k-rtl">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container body-content">
+        <p></p>
+        <div class="col-md-3">
+
+            <div class="thumbnail">
+
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div class="well well-sm text-center">
+
+                        @User.Identity.Name خوش آمدید
+                    </div>
+                    <a href="/Account/SingOut" class="btn btn-danger  btn-block">خروج از سایت</a>
+
+                }
+                else
+                {
+                    <div class="well well-sm text-center">
+
+                        کاربر مهمان خوش آمدید
+                    </div>
+                    <a href="/Account/Login" class="btn btn-info btn-block">ورود به سایت</a>
+                    <br />
+                    <a href="/Account/Login" class="btn btn-success btn-block">ثبت نام</a>
+
+                }
+            </div>
+            <p></p>
+            <p></p>
+            <div class="alert alert-warning text-center">
+                <a href="" id="CountShopCart"></a>
+
+            </div>
+            @Html.Action("ShowGroup","Product")
+            @Html.Partial("ShowState")
+        </div>
+        <div class="col-md-9">
+            @RenderBody()
+
+        </div>
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+        </footer>
+    </div>
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+            $.ajax({
+
+                url: "/Api/Shop/",
+                type: "Get",
+                data: {}
+
+
+
+
+            }).done(function (result) {
+
+                $('#CountShopCart').html(result);
+            });
+
+        });
+
+    </script>
+</body>
+</html>

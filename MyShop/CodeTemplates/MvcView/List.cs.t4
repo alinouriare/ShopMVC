@@ -1,0 +1,117 @@
+﻿<#@ template language="C#" HostSpecific="True" #>
+<#@ output extension=".cshtml" #>
+<#@ include file="Imports.include.t4" #>
+@model IEnumerable<#= "<" + ViewDataTypeName + ">" #>
+<#
+// The following chained if-statement outputs the file header code and markup for a partial view, a view using a layout page, or a regular view.
+if(IsPartialView) {
+#>
+
+<#
+} else if(IsLayoutPageSelected) {
+#>
+
+@{
+    ViewBag.Title = "فهرست " + Server.HtmlDecode(Html.DisplyModelPluralName(model => model).ToString());
+<#
+if (!String.IsNullOrEmpty(LayoutPageFile)) {
+#>
+    Layout = "<#= LayoutPageFile#>";
+<#
+}
+#>
+}
+
+<h2>@ViewBag.Title</h2>
+
+<#
+} else {
+#>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>فهرست @Html.DisplyModelPluralName(model => model)</title>
+</head>
+<body>
+<#
+    PushIndent("    ");
+}
+#>
+        @(Html.Kendo().Grid(Model)
+              .Name("Grid")
+              .Columns(columns =>
+                  {
+<#
+IEnumerable<PropertyMetadata> properties = ModelMetadata.Properties;
+foreach (PropertyMetadata property in properties) {
+    if (property.Scaffold && !property.IsPrimaryKey && !property.IsForeignKey) {#>
+<# if (property.IsAssociation && GetRelatedModelMetadata(property) == null) { continue; }#>  <#
+    }
+}
+#>
+<#
+foreach (PropertyMetadata property in properties) {
+    if (property.Scaffold && !property.IsPrimaryKey && !property.IsForeignKey) {
+#>
+<#
+        // This is a temporary work around until core scaffolding provides support for independent associations.
+        if (property.IsAssociation && GetRelatedModelMetadata(property) == null) {
+            continue;
+        }
+#>
+        columns.Bound(model => model.<#= GetValueExpression(property) #>);
+<#
+    }
+}
+string pkName = GetPrimaryKeyName();
+if (pkName != null) {
+#>
+					columns.Bound(item => @item.<#= pkName #>).Title("دستورات").Filterable(false).Groupable(false)
+							.Template(@<text>
+									@Html.ActionLink("ویرایش", "Edit", new {id = @item.<#= pkName #>}, new {@class = "k-button k-button-icontext k-grid-Edit"})
+									@Html.ActionLink("حذف", "Delete", new {id = @item.<#= pkName #>}, new {@class = "k-button k-button-icontext k-grid-Delete"})
+									</text>).Width(200);  
+<#
+} else {
+#>       
+<#
+}
+#>
+		})
+		.ToolBar(toolbar =>
+					{
+						toolbar.Custom().Action("Create","<#= ViewDataTypeName.Split('.').Last() #>").Text("افزودن");                          
+					}
+		)
+		.Groupable()
+		.Pageable()
+		.Sortable()
+		.Scrollable()
+		.Filterable()              
+		.DataSource(dataSource => dataSource
+									.Server()
+<#  if (pkName != null) {#>							
+									.Model(model => model.Id(item => item.<#= pkName #>))
+<#}#>
+					)              
+	)
+<#
+// The following code closes the tag used in the case of a view using a layout page and the body and html tags in the case of a regular view page
+#>
+<#
+if(!IsPartialView && !IsLayoutPageSelected) {
+    ClearIndent();
+#>
+</body>
+</html>
+<#
+}
+#>
+<#@ include file="ModelMetadataFunctions.cs.include.t4" #>

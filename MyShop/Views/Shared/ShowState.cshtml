@@ -1,0 +1,39 @@
+﻿@{ 
+
+    var db = new MyShop.Models.MyEshopEntities();
+    DateTime dt = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+    int Online =int.Parse( HttpContext.Current.Application["Online"].ToString());
+    var Sum = db.StateSite.Sum(s => s.Count);
+    int Now = (int) db.StateSite.First(s => s.Date == dt).Count;
+    DateTime dt2 = dt.AddDays(-1);
+    var Last=(int) db.StateSite.First(s => s.Date == dt2).Count;
+}
+
+<div class="list-group">
+    <a href="#" class="list-group-item active text-center">
+        آمار بازدید سایت
+    </a>
+    
+ 
+    <a  class="list-group-item"> بازدید امروز
+
+        <label class="badge pull-left">@Now</label>
+    </a>
+    <a class="list-group-item">
+        بازدید دیروز
+
+        <label class="badge pull-left">@Last</label>
+    </a>
+    <a class="list-group-item">
+        بازدید کل
+
+        <label class="badge pull-left">@Sum</label>
+    </a>
+    <a class="list-group-item">
+       افراد انلاین
+
+        <label class="badge pull-left">@Online</label>
+    </a>
+ </div>
+
+    

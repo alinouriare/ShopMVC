@@ -1,0 +1,100 @@
+﻿@model MyShop.Models.Products
+
+@{
+    ViewBag.Title = "افزودن " + Server.HtmlDecode(Html.DisplayNameFor(model => model).ToString());
+}
+
+<h2>افزودن @Html.DisplayNameFor(model => model)</h2>
+
+@using (Html.BeginForm("Create","Products",FormMethod.Post,new { enctype="multipart/form-data"}))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">        
+        @Html.ValidationSummary(true)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.GroupID , new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("GroupID", String.Empty)
+                @Html.ValidationMessageFor(model => model.GroupID)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ProductTitle, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ProductTitle)
+                @Html.ValidationMessageFor(model => model.ProductTitle)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ProductDescription, new { @class = "control-label col-md-2" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.ProductDescription)
+                @Html.ValidationMessageFor(model => model.ProductDescription)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ProductPrice, new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.ProductPrice)
+                @Html.ValidationMessageFor(model => model.ProductPrice)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ProductImage, new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+               @Html.Kendo().Upload().Name("ProductImage").Multiple(false)
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2" for="ProductImage">گالری تصاویر</label>
+           <div class="col-md-5"> 
+               @Html.Kendo().Upload().Name("ProductGallery").Multiple(true)
+           </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2" for="ProductImage">کلمات کلیدی</label>
+            <div class="col-md-10">
+                <input type="text" id="tags" name="tags" class="form-control" />
+                <p class="help-block"> کلمات کلیدی با - از هم جدا کنید</p>
+            </div>
+        </div>
+
+        @*<div class="form-group">
+            @Html.LabelFor(model => model.CreateDate, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CreateDate)
+                @Html.ValidationMessageFor(model => model.CreateDate)
+            </div>
+        </div>*@
+
+        @section Script
+        {
+       
+        <script src="/ckeditor/ckeditor.js"></script>
+        <script src="/ckeditor/adapters/jquery.js"></script>
+
+        <script>
+                $(function () {
+                    $('#ProductDescription').ckeditor();
+                });
+        </script>
+            
+            }
+
+        <div class="form-group" id="buttons">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="ایجاد" class="btn btn-primary" />
+				@Html.ActionLink("بازگشت به فهرست", "Index")
+            </div>
+        </div>
+     
+    </div>
+}
+

@@ -1,0 +1,16 @@
+﻿@model IEnumerable<MyShop.Models.Product_Groups>
+
+<div class="list-group">
+    <a href="#" class="list-group-item active text-center">
+       گروه محصولات
+    </a>
+    @foreach (var item in Model)
+    {
+        <a href="/Product/ShowProductByGroup/@item.GroupID" class="list-group-item">
+            @item.GroupTitle
+        <label class="label label-danger pull-left">@item.Products.Count</label>
+    </a>
+    }
+   
+    
+</div>
